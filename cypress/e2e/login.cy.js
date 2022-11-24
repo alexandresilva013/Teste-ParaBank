@@ -3,41 +3,44 @@ describe("Tela principal", ()=>{
         cy.visit('/')
     })
 
-    it("Login com sucesso", () =>{
-        cy.get('#loginPanel a').last().click()
+    before(function(){
+        cy.visit('/')
 
-        //verifica se está na página de registro
-        cy.get('#rightPanel h1').should('have.text', 'Signing up is easy!')
-
-        //gera um nome de usuário aleatório
-        const faker = require('faker-br');
-        var randomUsuario = faker.br.cpf();
-
-        cy.preenche_campos_cadastro(randomUsuario)
-
-        cy.get('input[type="submit"][value="Register"]').click()
-
-        cy.get('#rightPanel h1').should('have.text', `Welcome `+randomUsuario)
+        //Excluindo usúario
+        cy.limpa_BD()
     })
 
-    it.only("Verificar campos obrigatórios", () =>{
-        cy.get('#loginPanel a').last().click()
+    it("Login sem usuário e senha", () =>{
+        cy.get('form[name="login"]').submit()
+        cy.get('#rightPanel p').contains('Please enter a username and password.').should('be.visible')
+    })
 
-        //verifica se está na página de registro
-        cy.get('#rightPanel h1').should('have.text', 'Signing up is easy!')
+    it("Login sem usuário", () =>{
+        cy.get('input[name="password"]').type(Cypress.env('senha'))
+        cy.get('form[name="login"]').submit()
+        cy.get('#rightPanel p').contains('Please enter a username and password.').should('be.visible')
+    })
 
-        cy.get('input[type="submit"][value="Register"]').click()
+    it("Login sem senha", () =>{
+        cy.get('input[name="username"]').type(Cypress.env('usuario'))
+        cy.get('form[name="login"]').submit()
+        cy.get('#rightPanel p').contains('Please enter a username and password.').should('be.visible')
+    })
 
-        //verificando campos obrigatórios
-        cy.get('span').contains('First name is required.').should('be.visible')
-        cy.get('span').contains('Last name is required.').should('be.visible')
-        cy.get('span').contains('Address is required.').should('be.visible')
-        cy.get('span').contains('City is required.').should('be.visible')
-        cy.get('span').contains('State is required.').should('be.visible')
-        cy.get('span').contains('Zip Code is required.').should('be.visible')
-        cy.get('span').contains('Social Security Number is required.').should('be.visible')   
-        cy.get('span').contains('Username is required.').should('be.visible')  
-        cy.get('span').contains('Password is required.').should('be.visible')  
-        cy.get('span').contains('Password confirmation is required.').should('be.visible')  
+    //Teste não feito, já que é possível logar na aplicação mesmo sem cadastro realizado
+    it.skip("Login com dados incorretos", () =>{
+
+    })
+
+    it("Login com sucesso", () =>{
+        cy.cadastro_usuario()
+        
+        //confirma o cadastro com sucesso e faz o Lou out
+        cy.get('#rightPanel h1').should('have.text', `Welcome `+Cypress.env('usuario'))
+        cy.get('a').contains('Log Out').click()  
+
+        cy.get('input[name="username"]').type(Cypress.env('usuario'))
+        cy.get('input[name="password"]').type(Cypress.env('senha'))
+        cy.get('form[name="login"]').submit()
     })
 })
