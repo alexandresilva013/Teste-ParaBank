@@ -13,14 +13,6 @@ describe("Tela principal", ()=>{
     var numero_conta_checking
 
     it("Criação de uma conta", () =>{
-        function preventFormSubmitDefault(selector) {
-            cy.get(selector).then(form$ => {
-                form$.on("submit", e => {
-                    e.preventDefault();
-                });
-            });
-        }
-
         cy.cadastro_usuario()
 
         //confirma se o cadastro foi realizado com sucesso
@@ -32,19 +24,18 @@ describe("Tela principal", ()=>{
         //verifica se abriu a página de abrir uma nova conta
         cy.get('#rightPanel h1').should('contain', 'Open New Account')
         
-        //clica no botão de abrir uma nova conta do tipo CHECKING
-
-        //cy.get('input[value="Open New Account"]').click()
-
         cy.get('form.ng-pristine').submit()
+
+        function preventFormSubmitDefault(selector) {
+            cy.get(selector).then(form$ => {
+                form$.on("submit", e => {
+                    e.preventDefault();
+                });
+            });
+        }
 
         preventFormSubmitDefault("form");
         cy.get('input[value="Open New Account"]').click()
-
-        //cy.get('.ng-pristine').submit()
-        //cy.wait(10000)
-
-        
 
         cy.get('#newAccountId').then(($numero_conta) => {
             numero_conta_checking = $numero_conta.text()
