@@ -26,4 +26,7 @@ Eu usei a versão `v16.17.0` do Node.js e a `8.15.0` do npm (versões mais recen
 ## Instabilidade
 Devido à recorrente instabilidade, ainda está faltando a automatização da criação de conta, movimentação e consulta de movimentações.
 
+## Atualizações futuras
+Além da finalização das funcionalidades pendentes, deixo como alterações futuras a alteração dos testes de Cadastro de Usuário diretamente através da API. Desta forma, poderá ser economizado bastante tempo para rodar a suíte de testes.
+
 Para dúvidas ou sugestões só enviar uma mensagem pelo [linkedin](https://www.linkedin.com/in/alexandre-silva-2297066a/)
